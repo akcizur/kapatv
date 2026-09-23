@@ -1,0 +1,162 @@
+/* ============================================================
+   GRID PAGE — pozadí + ambient světlo
+   ============================================================ */
+#gridPage {
+  background: rgba(10,10,12,0.4);
+  backdrop-filter: blur(50px) saturate(1.5) brightness(0.5);
+  -webkit-backdrop-filter: blur(50px) saturate(1.5) brightness(0.5);
+}
+#gridPage::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(120,180,255,0.10), transparent 55%),
+    radial-gradient(circle at 50% 55%, rgba(255,255,255,0.06), transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.9s var(--ease-soft) 0.2s;
+}
+#gridPage[data-state="active"]::before { opacity: 1; }
+
+/* ============================================================
+   SCROLL + CENTROVÁNÍ
+   ============================================================ */
+.GridScroll {
+  position: absolute; inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  padding: 7vh 4vw;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.18) transparent;
+}
+.GridScroll::-webkit-scrollbar { width: 8px; }
+.GridScroll::-webkit-scrollbar-track { background: transparent; }
+.GridScroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.18);
+  border-radius: 999px;
+}
+.GridScroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.HexGrid {
+  margin: auto;                    /* dokonalé centrování */
+  --w: 104px;
+  --row: calc(var(--w) * 0.866);
+  --circle: calc(var(--w) * 0.92);
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 8), var(--w));
+  grid-auto-rows: var(--row);
+  place-items: center;
+  gap: 0;
+  perspective: 1400px;
+  position: relative;
+  isolation: isolate;
+  padding: 12px;
+}
+
+/* ============================================================
+   DLAŽDICE
+   ============================================================ */
+.Tile {
+  position: relative;
+  width: var(--circle); height: var(--circle);
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.025) 100%);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.12) inset,
+    0 -1px 0 rgba(0,0,0,0.3) inset,
+    0 8px 24px rgba(0,0,0,0.4);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    background 0.3s var(--ease-soft),
+    border-color 0.3s var(--ease-soft),
+    box-shadow 0.4s var(--ease-soft);
+  will-change: opacity, transform, filter;
+}
+
+/* honeycomb offset (liché řádky) */
+.Tile.offset { translate: calc(var(--w) / 2) 0; }
+
+/* VSTUP — radiálně od středu */
+#gridPage[data-state="active"] .Tile {
+  animation: tileIn 0.75s var(--ease) forwards;
+  animation-delay: calc(var(--delay, 0ms) + 80ms);
+}
+@keyframes tileIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.1) translateZ(-160px) rotateX(-18deg);
+    filter: blur(12px);
+  }
+  55% { opacity: 1; filter: blur(0); }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateZ(0) rotateX(0);
+    filter: blur(0);
+  }
+}
+
+/* VÝSTUP */
+#gridPage[data-state="leaving"] .Tile,
+#gridPage[data-state="hidden"] .Tile {
+  animation: tileOut 0.32s var(--ease-soft) forwards;
+  animation-delay: calc(var(--delay, 0ms) * 0.15);
+}
+@keyframes tileOut {
+  0%   { opacity: 1; transform: scale(1); filter: blur(0); }
+  100% { opacity: 0; transform: scale(0.3) translateZ(-60px); filter: blur(8px); }
+}
+
+.Tile img {
+  width: 66%; height: 66%;
+  object-fit: contain; border-radius: 50%;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Hover */
+.Tile:hover {
+  background: linear-gradient(145deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.05) 100%);
+  border-color: rgba(255,255,255,0.3);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.18) inset,
+    0 12px 32px rgba(0,0,0,0.5);
+}
+
+/* Aktivní kanál */
+.Tile.active {
+  border-color: #fff;
+  background: linear-gradient(145deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 100%);
+  box-shadow:
+    0 0 0 1px #fff,
+    0 0 28px rgba(255,255,255,0.22),
+    0 14px 40px rgba(0,0,0,0.55);
+}
+
+/* Klávesnicový / hover focus */
+.Tile.hovered {
+  transform: scale(1.12) rotate(-2deg);
+  z-index: 2;
+  border-color: rgba(255,255,255,0.6);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.85),
+    0 16px 44px rgba(0,0,0,0.55),
+    0 0 36px rgba(255,255,255,0.16);
+}
+.Tile.hovered img { transform: scale(1.1); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 940px) { .HexGrid { --w: 88px; } }
+@media (max-width: 640px) { .HexGrid { --w: 72px; } }
+@media (max-width: 400px) { .HexGrid { --w: 60px; } }
