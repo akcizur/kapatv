@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liquid TV Grid — Honeycomb</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/player.css">
+<link rel="stylesheet" href="css/grid.css">
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+
+<body data-page="player" data-paused="true" class="paused">
+
+<video id="video" playsinline webkit-playsinline muted></video>
+
+<!-- PLAYER PAGE -->
+<div class="Page" id="playerPage" data-state="active">
+  <div class="ChannelInfo" id="channelInfo">
+    <span id="channelName">ČT1</span>
+    <img id="channelLogo" alt="">
+  </div>
+
+  <div class="Center">
+    <div class="Row">
+      <div class="SideLogo" id="channelLogoSide">
+        <img id="sideLogo" alt="">
+      </div>
+
+      <div class="Btn BtnPlay" id="playBtn" role="button" tabindex="0" aria-label="Přehrát / pozastavit">
+        <svg class="playIcon" viewBox="0 0 24 24">
+          <polygon points="6 3.5 19.5 12 6 20.5 6 3.5"></polygon>
+        </svg>
+        <span class="Spinner"></span>
+      </div>
+
+      <div class="Btn" id="gridBtn" role="button" tabindex="0"
+           aria-label="Kanály" data-tooltip="Kanály · G">
+        <svg class="fill" viewBox="0 0 24 24">
+          <circle cx="6" cy="6" r="2.4"></circle>
+          <circle cx="12" cy="6" r="2.4"></circle>
+          <circle cx="18" cy="6" r="2.4"></circle>
+          <circle cx="9" cy="12" r="2.4"></circle>
+          <circle cx="15" cy="12" r="2.4"></circle>
+          <circle cx="6" cy="18" r="2.4"></circle>
+          <circle cx="12" cy="18" r="2.4"></circle>
+          <circle cx="18" cy="18" r="2.4"></circle>
+        </svg>
+      </div>
+    </div>
+
+    <div class="Row RowSecondary">
+      <div class="Volume" id="volume">
+        <div class="VolIcon" id="muteBtn" title="Hlasitost">
+          <svg id="volIcon" viewBox="0 0 24 24"></svg>
+        </div>
+        <div class="VolSlider">
+          <input id="volSlider" type="range" min="0" max="100" value="100">
+          <span class="VolValue" id="volValue">100</span>
+        </div>
+      </div>
+
+      <div class="MenuAnchor">
+        <div class="Btn" id="ratioBtn" role="button" tabindex="0"
+             aria-label="Poměr stran" data-tooltip="Ořez · A">
+          <svg viewBox="0 0 24 24">
+            <rect x="2" y="4.5" width="20" height="15" rx="2.5"></rect>
+            <rect x="6.5" y="8.5" width="11" height="7" rx="1.5" stroke-dasharray="2.5 2.5"></rect>
+          </svg>
+        </div>
+        <div class="Menu" id="ratioMenu">
+          <div class="MenuTitle">Ořez / poměr</div>
+          <div class="MenuItem" data-ratio="cover"><span>Vyplnit (ořez)</span><svg class="check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="MenuItem" data-ratio="contain"><span>Celé video</span><svg class="check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="MenuItem" data-ratio="fill"><span>Roztáhnout</span><svg class="check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="MenuItem" data-ratio="zoom"><span>Přiblížit 125 %</span><svg class="check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+        </div>
+      </div>
+
+      <div class="MenuAnchor">
+        <div class="Btn" id="qualityBtn" role="button" tabindex="0"
+             aria-label="Rozlišení" data-tooltip="Rozlišení · Q">
+          <span class="QBadge" id="qualityBadge">AUTO</span>
+        </div>
+        <div class="Menu" id="qualityMenu">
+          <div class="MenuTitle">Rozlišení</div>
+        </div>
+      </div>
+
+      <div class="Btn" id="fsBtn" role="button" tabindex="0"
+           aria-label="Celá obrazovka" data-tooltip="Fullscreen · F">
+        <svg viewBox="0 0 24 24">
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <polyline points="9 21 3 21 3 15"></polyline>
+          <line x1="21" y1="3" x2="14" y2="10"></line>
+          <line x1="3" y1="21" x2="10" y2="14"></line>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GRID PAGE -->
+<div class="Page" id="gridPage" data-state="hidden">
+  <div class="GridScroll" id="gridScroll">
+    <div class="HexGrid" id="hexGrid"></div>
+  </div>
+</div>
+
+<div class="Toast" id="toast"></div>
+<div class="Hint" id="hint">Klikněte kamkoli pro zapnutí zvuku</div>
+
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/grid.js"></script>
+<script src="js/player.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
