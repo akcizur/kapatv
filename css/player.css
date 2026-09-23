@@ -477,3 +477,37 @@ body.loading .BtnPlay .Spinner { opacity: 1; }
     transform: translateX(-50%) translateY(0);
   }
 }
+
+
+/* Reference-frame correction:
+   title + logo are one left-side cluster; PLAY remains the true center. */
+.Center > .Row:first-child .SideLogo {
+  display: none;
+}
+
+.ChannelInfo {
+  left: auto;
+  right: calc(50% + 70px);
+  transform: translateY(-50%);
+}
+
+.ChannelInfo.switching {
+  transform: translateY(-50%) translateY(-6px) scale(0.95);
+}
+
+@media (max-width: 760px) {
+  .Center > .Row:first-child .SideLogo {
+    display: none;
+  }
+
+  .ChannelInfo {
+    left: 50%;
+    right: auto;
+    top: calc(50% - 94px);
+    transform: translateX(-50%);
+  }
+
+  .ChannelInfo.switching {
+    transform: translateX(-50%) translateY(-6px) scale(0.95);
+  }
+}
