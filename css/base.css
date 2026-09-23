@@ -1,0 +1,82 @@
+/* ============================================================
+   RESET + PROMĚNNÉ
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+
+:root {
+  --glass: rgba(255,255,255,0.10);
+  --border: rgba(255,255,255,0.12);
+  --border-hi: rgba(255,255,255,0.32);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --page: 700ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: #000;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   VIDEO
+   ============================================================ */
+video {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  object-fit: var(--vfit, cover);
+  background: #000; pointer-events: none;
+  transform: scale(var(--vscale, 1));
+  transition:
+    opacity 0.5s var(--ease-soft),
+    filter 0.7s var(--ease-soft),
+    transform 0.7s var(--ease-soft);
+}
+video.switching { opacity: 0.3; }
+body[data-page="grid"] video {
+  filter: blur(40px) brightness(0.4) saturate(1.2);
+  transform: scale(calc(var(--vscale, 1) * 1.12));
+}
+
+/* ============================================================
+   PAGE SYSTEM — přechody mezi obrazovkami
+   ============================================================ */
+.Page {
+  position: fixed; inset: 0;
+  transition: opacity var(--page), transform var(--page), filter var(--page);
+  will-change: opacity, transform, filter;
+}
+.Page[data-state="hidden"] {
+  opacity: 0; pointer-events: none; visibility: hidden;
+}
+
+#playerPage[data-state="leaving"] {
+  opacity: 0;
+  transform: scale(0.82) translateY(-6%);
+  filter: blur(16px);
+}
+#playerPage[data-state="entering"] {
+  opacity: 0;
+  transform: scale(1.08) translateY(3%);
+  filter: blur(10px);
+}
+#gridPage[data-state="entering"] {
+  opacity: 0;
+  transform: scale(0.9) translateY(4%);
+  filter: blur(24px);
+}
+#gridPage[data-state="leaving"] {
+  opacity: 0;
+  transform: scale(1.15) translateY(-3%);
+  filter: blur(18px);
+}
+
+/* ============================================================
+   IDLE — schování UI
+   ============================================================ */
+body.idle #playerPage {
+  opacity: 0;
+  pointer-events: none;
+}
